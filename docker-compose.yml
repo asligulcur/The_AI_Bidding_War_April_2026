@@ -1,0 +1,14 @@
+# Load ANTHROPIC_API_KEY from .env (do not commit .env).
+services:
+  procurement:
+    build: .
+    env_file:
+      - .env
+    environment:
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-4-6}
+      BUYER_TYPE: ${BUYER_TYPE:-buyer}
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./logs:/app/logs
+      - ./config:/app/config

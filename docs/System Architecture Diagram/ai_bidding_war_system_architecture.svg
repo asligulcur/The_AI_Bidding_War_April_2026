@@ -1,0 +1,269 @@
+<svg width="1400" height="1100" viewBox="0 0 1400 1100" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #FFFFFF;">
+<defs>
+<marker id="arrow-solid" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M1 1L9 5L1 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+<marker id="arrow-dash" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M1 1L9 5L1 9" fill="none" stroke="context-stroke" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+<!-- subtle shadow for component boxes -->
+<filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+<feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.06"/>
+</filter>
+</defs>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- TITLE BLOCK                                                      -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<text style="font-size:20px;font-weight:700;fill:#0f172a;letter-spacing:-0.02em" x="700" y="32" text-anchor="middle">The AI Bidding War — System Architecture</text>
+<text style="font-size:12px;fill:#64748b;letter-spacing:0.02em" x="700" y="52" text-anchor="middle">orchestrator.py · Anthropic API · advisor (value, COI, risk) · governance nudge · skills/award_contract</text>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- ZONE 1 · Control Plane                                           -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<rect x="24" y="80" width="200" height="200" rx="12" fill="#f8fafc" stroke="#3b82f6" stroke-width="1" stroke-dasharray="6 3" opacity="0.9"/>
+<text style="font-size:12px;font-weight:700;fill:#2563eb;letter-spacing:0.03em" x="34" y="100">ZONE 1</text>
+<text style="font-size:11px;fill:#64748b" x="34" y="115">Control plane (cold-start)</text>
+
+<!-- Configuration box -->
+<rect x="40" y="132" width="168" height="50" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="0.8" filter="url(#shadow)"/>
+<text style="font-size:13px;font-weight:600;fill:#1e40af" x="124" y="152" text-anchor="middle">Configuration</text>
+<text style="font-size:11px;fill:#3b82f6" x="124" y="168" text-anchor="middle">.env · config/scenarios.json</text>
+
+<!-- Personas box -->
+<rect x="40" y="200" width="168" height="50" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="0.8" filter="url(#shadow)"/>
+<text style="font-size:13px;font-weight:600;fill:#1e40af" x="124" y="220" text-anchor="middle">Personas</text>
+<text style="font-size:11px;fill:#3b82f6" x="124" y="236" text-anchor="middle">agent.md (buyer + vendors)</text>
+
+<!-- Zone 1 → Orchestrator arrows -->
+<line x1="208" y1="157" x2="268" y2="200" stroke="#94a3b8" stroke-width="1" marker-end="url(#arrow-solid)"/>
+<text style="font-size:10px;fill:#64748b" x="225" y="172">config</text>
+
+<line x1="208" y1="225" x2="268" y2="225" stroke="#94a3b8" stroke-width="1" marker-end="url(#arrow-solid)"/>
+<text style="font-size:10px;fill:#64748b" x="228" y="218">personas</text>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- ZONE 2 · Hub-and-spoke Runtime                                   -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<rect x="254" y="80" width="530" height="320" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1" stroke-dasharray="6 3" opacity="0.9"/>
+<text style="font-size:12px;font-weight:700;fill:#16a34a;letter-spacing:0.03em" x="264" y="100">ZONE 2</text>
+<text style="font-size:11px;fill:#64748b" x="264" y="115">Hub-and-spoke runtime (orchestrator.py · Anthropic API)</text>
+
+<!-- Hub state callout -->
+<rect x="274" y="128" width="240" height="78" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="0.6"/>
+<text style="font-size:11px;font-weight:700;fill:#15803d" x="284" y="144">Hub state (per round)</text>
+<line x1="284" y1="149" x2="504" y2="149" stroke="#16a34a" stroke-width="0.3" opacity="0.4"/>
+<text style="font-size:10px;fill:#1a1a1a" x="284" y="162">vendor_histories: isolated list per vendor</text>
+<text style="font-size:10px;fill:#1a1a1a" x="294" y="174">appended each round · no cross-vendor data</text>
+<text style="font-size:10px;fill:#1a1a1a" x="284" y="186">conversation_buyer: bid_summary (parsed</text>
+<text style="font-size:10px;fill:#1a1a1a" x="294" y="198">JSON all vendors) + RFP + hard ceiling</text>
+
+<!-- Orchestrator -->
+<rect x="274" y="218" width="180" height="52" rx="8" fill="#fefce8" stroke="#a16207" stroke-width="0.8" filter="url(#shadow)"/>
+<text style="font-size:14px;font-weight:600;fill:#713f12" x="364" y="238" text-anchor="middle">Orchestrator</text>
+<text style="font-size:11px;fill:#a16207" x="364" y="255" text-anchor="middle">orchestrator.py</text>
+
+<!-- Orchestrator → Buyer arrow -->
+<line x1="454" y1="244" x2="520" y2="244" stroke="#15803d" stroke-width="1.2" marker-end="url(#arrow-solid)"/>
+<text style="font-size:10px;fill:#64748b" x="476" y="236">session</text>
+
+<!-- Buyer Agent -->
+<rect x="520" y="218" width="180" height="52" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="0.8" filter="url(#shadow)"/>
+<text style="font-size:14px;font-weight:600;fill:#14532d" x="610" y="238" text-anchor="middle">Buyer agent</text>
+<text style="font-size:11px;fill:#16a34a" x="610" y="255" text-anchor="middle">Claude (.env model)</text>
+
+<!-- Round-forward note -->
+<text style="font-size:9px;font-style:italic;fill:#16a34a" x="274" y="290">→ Vendors see buyer_reply_prev only (hub msg)</text>
+
+<!-- ── Vendors (stacked right of buyer) ── -->
+<!-- Vendor C -->
+<rect x="660" y="128" width="108" height="44" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="0.7" filter="url(#shadow)"/>
+<text style="font-size:13px;font-weight:600;fill:#991b1b" x="714" y="144" text-anchor="middle">Vendor C</text>
+<text style="font-size:11px;fill:#dc2626" x="714" y="161" text-anchor="middle">Mid-tier</text>
+<line x1="680" y1="218" x2="700" y2="172" stroke="#94a3b8" stroke-width="0.9" marker-end="url(#arrow-solid)"/>
+<text style="font-size:9px;fill:#dc2626;font-weight:500" x="702" y="200">isolated</text>
+
+<!-- Vendor B -->
+<rect x="660" y="266" width="108" height="44" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="0.7" filter="url(#shadow)"/>
+<text style="font-size:13px;font-weight:600;fill:#991b1b" x="714" y="282" text-anchor="middle">Vendor B</text>
+<text style="font-size:11px;fill:#dc2626" x="714" y="299" text-anchor="middle">Budget</text>
+<line x1="686" y1="270" x2="700" y2="270" stroke="#94a3b8" stroke-width="0.9" marker-end="url(#arrow-solid)"/>
+<text style="font-size:9px;fill:#dc2626;font-weight:500" x="702" y="260">isolated</text>
+
+<!-- Vendor A -->
+<rect x="660" y="340" width="108" height="44" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="0.7" filter="url(#shadow)"/>
+<text style="font-size:13px;font-weight:600;fill:#991b1b" x="714" y="356" text-anchor="middle">Vendor A</text>
+<text style="font-size:11px;fill:#dc2626" x="714" y="373" text-anchor="middle">Premium</text>
+<line x1="660" y1="270" x2="680" y2="340" stroke="#94a3b8" stroke-width="0.9" marker-end="url(#arrow-solid)"/>
+<text style="font-size:9px;fill:#dc2626;font-weight:500" x="648" y="310">isolated</text>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- ZONE 3 · Strategic Oversight                                     -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<rect x="254" y="430" width="560" height="180" rx="12" fill="#fdf2f8" stroke="#be185d" stroke-width="1" stroke-dasharray="6 3" opacity="0.9"/>
+<text style="font-size:12px;font-weight:700;fill:#be185d;letter-spacing:0.03em" x="264" y="450">ZONE 3</text>
+<text style="font-size:11px;fill:#64748b" x="264" y="465">Strategic oversight (in-run, per proposed award)</text>
+<text style="font-size:10px;fill:#9ca3af" x="264" y="478">agents/advisor.py — compliance · value · risk · COI</text>
+
+<!-- Strategic Advisor box -->
+<rect x="440" y="490" width="170" height="44" rx="8" fill="#fce7f3" stroke="#be185d" stroke-width="0.7" filter="url(#shadow)"/>
+<text style="font-size:13px;font-weight:600;fill:#831843" x="525" y="506" text-anchor="middle">Strategic advisor</text>
+<text style="font-size:11px;fill:#be185d" x="525" y="523" text-anchor="middle">Claude + agents/advisor.py</text>
+
+<!-- Advisor → Audit summary -->
+<line x1="610" y1="512" x2="644" y2="512" stroke="#be185d" stroke-width="1" marker-end="url(#arrow-solid)"/>
+
+<!-- Audit summary box -->
+<rect x="644" y="490" width="156" height="44" rx="8" fill="#fce7f3" stroke="#be185d" stroke-width="0.7" filter="url(#shadow)"/>
+<text style="font-size:13px;font-weight:600;fill:#831843" x="722" y="506" text-anchor="middle">Audit summary</text>
+<text style="font-size:11px;fill:#be185d" x="722" y="523" text-anchor="middle">Risk &amp; value (Markdown)</text>
+
+<!-- Advisor I/O callout -->
+<rect x="274" y="546" width="270" height="56" rx="6" fill="#fff1f2" stroke="#be185d" stroke-width="0.5"/>
+<text style="font-size:10px;font-weight:700;fill:#be185d" x="284" y="559">Advisor I/O</text>
+<line x1="284" y1="563" x2="534" y2="563" stroke="#be185d" stroke-width="0.3" opacity="0.3"/>
+<text style="font-size:10px;fill:#4a044e" x="284" y="575">IN  scenario · RFP · award msg · stitched threads</text>
+<text style="font-size:10px;fill:#4a044e" x="284" y="587">OUT Markdown audit (compliance / value / risk / COI)</text>
+<text style="font-size:10px;fill:#4a044e" x="284" y="599">FAIL stub text → logged · flow continues to gatekeeper</text>
+
+<!-- I/O callout → advisor connector -->
+<line x1="420" y1="546" x2="490" y2="534" stroke="#be185d" stroke-width="0.4" stroke-dasharray="3 2" opacity="0.4"/>
+
+<!-- Orchestrator → Strategic Advisor (solid = runtime API call) -->
+<path d="M364 270 L364 490 L440 490" fill="none" stroke="#be185d" stroke-width="1.3" marker-end="url(#arrow-solid)"/>
+<text style="font-size:9px;fill:#be185d" x="296" y="484">scenario · RFP · award msg · threads</text>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- ZONE 4 · Execution & Guardrails                                  -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<rect x="850" y="430" width="530" height="310" rx="12" fill="#fffbeb" stroke="#b45309" stroke-width="1" stroke-dasharray="6 3" opacity="0.9"/>
+<text style="font-size:12px;font-weight:700;fill:#b45309;letter-spacing:0.03em" x="860" y="450">ZONE 4</text>
+<text style="font-size:11px;fill:#64748b" x="860" y="465">Execution &amp; guardrails</text>
+
+<!-- Zone 3 → Zone 4 connector -->
+<line x1="800" y1="512" x2="878" y2="512" stroke="#64748b" stroke-width="1" marker-end="url(#arrow-solid)"/>
+<text style="font-size:10px;fill:#64748b" x="826" y="504">review</text>
+
+<!-- Human gatekeeper (diamond) -->
+<polygon points="970,512 1060,456 1150,512 1060,568" fill="#fef3c7" stroke="#92400e" stroke-width="1"/>
+<text style="font-size:12px;font-weight:600;fill:#78350f" x="1060" y="502" text-anchor="middle">Human gatekeeper</text>
+<text style="font-size:11px;fill:#92400e" x="1060" y="518" text-anchor="middle">Terminal yes/no</text>
+<text style="font-size:10px;fill:#be185d;font-style:italic" x="1060" y="534" text-anchor="middle">Optional: nudge</text>
+
+<!-- Review → Human arrow -->
+<line x1="878" y1="512" x2="970" y2="512" stroke="#64748b" stroke-width="1" marker-end="url(#arrow-solid)"/>
+
+<!-- VETO path: Human → No contract (governance worked) -->
+<path d="M1150 488 L1185 488 L1185 472 L1200 472" fill="none" stroke="#dc2626" stroke-width="1" marker-end="url(#arrow-solid)"/>
+<text style="font-size:10px;font-weight:600;fill:#dc2626" x="1158" y="480">veto</text>
+
+<rect x="1200" y="448" width="160" height="48" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="0.7" filter="url(#shadow)"/>
+<text style="font-size:13px;font-weight:600;fill:#991b1b" x="1280" y="466" text-anchor="middle">NO_AWARD</text>
+<text style="font-size:10px;fill:#dc2626" x="1280" y="480" text-anchor="middle">No contract executed;</text>
+<text style="font-size:10px;fill:#dc2626" x="1280" y="492" text-anchor="middle">governance controls worked</text>
+
+<!-- APPROVE path: Human → Guardrail -->
+<path d="M1150 536 L1185 536 L1185 598 L1200 598" fill="none" stroke="#16a34a" stroke-width="1" marker-end="url(#arrow-solid)"/>
+<text style="font-size:10px;font-weight:600;fill:#16a34a" x="1158" y="572">approve</text>
+
+<!-- Guardrail box -->
+<rect x="1200" y="558" width="160" height="82" rx="8" fill="#fef9c3" stroke="#b45309" stroke-width="0.8" filter="url(#shadow)"/>
+<text style="font-size:13px;font-weight:600;fill:#78350f" x="1280" y="578" text-anchor="middle">Guardrail</text>
+<text style="font-size:11px;fill:#b45309" x="1280" y="596" text-anchor="middle">skills/award_contract.py</text>
+<text style="font-size:11px;fill:#b45309" x="1280" y="612" text-anchor="middle">≤ $15,000 → OK</text>
+<text style="font-size:11px;fill:#b45309" x="1280" y="628" text-anchor="middle">else → ERROR</text>
+
+<!-- Guardrail → Outcome -->
+<line x1="1280" y1="640" x2="1280" y2="670" stroke="#64748b" stroke-width="1" marker-end="url(#arrow-solid)"/>
+<text style="font-size:10px;fill:#64748b" x="1288" y="660">result</text>
+
+<!-- Outcome box -->
+<rect x="1220" y="674" width="120" height="32" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="0.7" filter="url(#shadow)"/>
+<text style="font-size:13px;font-weight:600;fill:#1e293b" x="1280" y="694" text-anchor="middle">Outcome</text>
+<text style="font-size:10px;fill:#64748b" x="1280" y="716">Success or blocked</text>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- GOVERNANCE NUDGE CYCLE (dashed)                                  -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<path d="M1060 568 L1060 670 L610 670 L610 270" fill="none" stroke="#be185d" stroke-width="1" stroke-dasharray="6 3" marker-end="url(#arrow-dash)" opacity="0.6"/>
+<text style="font-size:10px;fill:#be185d;font-weight:500" x="810" y="684">no → nudge (orchestrator relays)</text>
+
+<!-- Buyer → Strategic advisor: re-audit (dashed) -->
+<path d="M556 270 L556 420 L520 420 L520 490" fill="none" stroke="#be185d" stroke-width="1" stroke-dasharray="6 3" marker-end="url(#arrow-dash)" opacity="0.6"/>
+<text style="font-size:10px;fill:#be185d" x="564" y="400">re-audit</text>
+<text style="font-size:10px;fill:#be185d" x="564" y="413">(via orchestrator)</text>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- WRITE ARROW: Orchestrator → Zone 5 (dotted)                      -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<path d="M300 270 L300 380 L240 380 L240 780" fill="none" stroke="#4d7c0f" stroke-width="1" stroke-dasharray="2 3" marker-end="url(#arrow-dash)" opacity="0.5"/>
+<text style="font-size:9px;fill:#4d7c0f;font-weight:500" x="236" y="410" text-anchor="end">append-only</text>
+<text style="font-size:9px;fill:#4d7c0f;font-weight:500" x="236" y="422" text-anchor="end">writes during run</text>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- ZONE 5 · Run Outputs                                             -->
+<!-- Two tiers: orchestrator writes logs during run;                   -->
+<!-- evaluation/CFO derived post-run from those logs                   -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<rect x="24" y="780" width="760" height="160" rx="12" fill="#f0fdf4" stroke="#4d7c0f" stroke-width="1" stroke-dasharray="2 3" opacity="0.9"/>
+<text style="font-size:12px;font-weight:700;fill:#4d7c0f;letter-spacing:0.03em" x="34" y="800">ZONE 5</text>
+<text style="font-size:11px;fill:#64748b" x="34" y="815">Run outputs &amp; post-run derivatives</text>
+
+<!-- Tier label: written during run -->
+<text style="font-size:9px;font-weight:600;fill:#4d7c0f;letter-spacing:0.04em" x="44" y="838">WRITTEN DURING RUN (orchestrator)</text>
+
+<!-- Artifact 1: Session logs -->
+<rect x="44" y="846" width="165" height="42" rx="6" fill="#ecfccb" stroke="#4d7c0f" stroke-width="0.6" filter="url(#shadow)"/>
+<text style="font-size:12px;font-weight:600;fill:#365314" x="126" y="862" text-anchor="middle">Session logs</text>
+<text style="font-size:10px;fill:#4d7c0f" x="126" y="878" text-anchor="middle">scenario_*.log</text>
+
+<!-- Artifact 2: Structured evidence -->
+<rect x="224" y="846" width="170" height="42" rx="6" fill="#ecfccb" stroke="#4d7c0f" stroke-width="0.6" filter="url(#shadow)"/>
+<text style="font-size:12px;font-weight:600;fill:#365314" x="309" y="862" text-anchor="middle">Structured evidence</text>
+<text style="font-size:10px;fill:#4d7c0f" x="309" y="878" text-anchor="middle">evidence_log_*.json</text>
+
+<!-- Arrow: logs → evaluation (post-run derivation) -->
+<line x1="394" y1="867" x2="440" y2="900" stroke="#4d7c0f" stroke-width="0.8" stroke-dasharray="3 2" marker-end="url(#arrow-dash)" opacity="0.5"/>
+<line x1="309" y1="888" x2="440" y2="910" stroke="#4d7c0f" stroke-width="0.8" stroke-dasharray="3 2" marker-end="url(#arrow-dash)" opacity="0.5"/>
+
+<!-- Tier label: derived post-run -->
+<text style="font-size:9px;font-weight:600;fill:#64748b;letter-spacing:0.04em" x="440" y="900">DERIVED POST-RUN (export_evaluation.py)</text>
+
+<!-- Artifact 3: Evaluation (derived) -->
+<rect x="440" y="906" width="160" height="42" rx="6" fill="#f0fdf4" stroke="#4d7c0f" stroke-width="0.6" stroke-dasharray="4 2" filter="url(#shadow)"/>
+<text style="font-size:12px;font-weight:600;fill:#365314" x="520" y="922" text-anchor="middle">Evaluation</text>
+<text style="font-size:10px;fill:#4d7c0f" x="520" y="938" text-anchor="middle">CSV / final report</text>
+
+<!-- Artifact 4: Executive narrative (optional, derived) -->
+<rect x="616" y="906" width="156" height="42" rx="6" fill="#f0fdf4" stroke="#4d7c0f" stroke-width="0.6" stroke-dasharray="4 2" filter="url(#shadow)"/>
+<text style="font-size:12px;font-weight:600;fill:#365314" x="694" y="922" text-anchor="middle">Executive narrative</text>
+<text style="font-size:10px;fill:#4d7c0f;font-style:italic" x="694" y="938" text-anchor="middle">CFO summary (Md) · optional</text>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- LEGEND                                                           -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<rect x="24" y="980" width="1356" height="100" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+
+<text style="font-size:13px;font-weight:700;fill:#0f172a" x="44" y="1004">Legend</text>
+
+<!-- Line types -->
+<line x1="44" y1="1022" x2="84" y2="1022" stroke="#be185d" stroke-width="1.3"/>
+<text style="font-size:11px;fill:#334155" x="92" y="1026">Solid = runtime API call (orchestrator invokes audit, buyer, vendors via Anthropic API)</text>
+
+<line x1="44" y1="1040" x2="84" y2="1040" stroke="#be185d" stroke-width="1" stroke-dasharray="6 3" opacity="0.6"/>
+<text style="font-size:11px;fill:#334155" x="92" y="1044">Dashed = governance / nudge loop (human no → orchestrator → buyer → re-audit)</text>
+
+<line x1="44" y1="1058" x2="84" y2="1058" stroke="#4d7c0f" stroke-width="1" stroke-dasharray="2 3" opacity="0.5"/>
+<text style="font-size:11px;fill:#334155" x="92" y="1062">Dotted = file writes / persisted artifacts (append-only during run; not read as cold-start inputs)</text>
+
+<!-- Color swatches -->
+<rect x="860" y="1014" width="14" height="14" rx="3" fill="#fce7f3" stroke="#be185d" stroke-width="0.6"/>
+<text style="font-size:11px;fill:#334155" x="882" y="1026">Strategic Audit (Zone 3) — in-run, per proposed award, governance &amp; assurance</text>
+
+<rect x="860" y="1034" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="0.6"/>
+<text style="font-size:11px;fill:#334155" x="882" y="1046">Hub state (Zone 2) — per-round state; vendors never see other vendors' bids</text>
+
+<rect x="860" y="1054" width="14" height="14" rx="3" fill="#ecfccb" stroke="#4d7c0f" stroke-width="0.6"/>
+<text style="font-size:11px;fill:#334155" x="882" y="1066">Zone 5 outputs — persisted after run; never loaded as orchestrator cold-start inputs</text>
+
+</svg>

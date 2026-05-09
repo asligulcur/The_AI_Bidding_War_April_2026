@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Agent Architecture Canvas — The AI Bidding War (Phase 2)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+    background: #F7F8FA;
+    padding: 20px 16px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1060px; margin: 0 auto; }
+  .header { margin-bottom: 16px; }
+  .header-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 2px solid #990000; padding-bottom: 8px;
+  }
+  .header-bar h1 {
+    font: 700 22px/1.2 Georgia, 'Palatino Linotype', serif;
+    color: #1a1a2e; letter-spacing: -0.3px;
+  }
+  .header-bar .course { font: 600 10px Georgia, serif; color: #990000; }
+  .subtitle {
+    font-size: 11px; color: #5a5a6a; line-height: 1.5;
+    margin-top: 6px; font-style: italic;
+  }
+  .canvas { position: relative; }
+  .flow-indicator {
+    position: absolute; left: -18px; top: 20px; bottom: 20px;
+    width: 4px; border-radius: 2px;
+    background: linear-gradient(to bottom, #9B2335 0%, #9B2335 20%, #0D6B5E 26%, #0D6B5E 50%, #3D5A80 56%, #3D5A80 74%, #B85C3A 80%, #B85C3A 100%);
+    opacity: 0.25;
+  }
+  .zone {
+    border-radius: 10px; padding: 10px 14px 14px; position: relative;
+    margin-bottom: 12px;
+  }
+  .zone:last-child { margin-bottom: 0; }
+  .zone-1 { background: #FDF2F3; border: 1px solid #E8B4B8; }
+  .zone-2 {
+    background: #EBF7F4; border: 2px solid #8ECFC4;
+    padding: 12px 16px 16px;
+    box-shadow: 0 2px 16px rgba(13,107,94,0.08);
+  }
+  .zone-3 { background: #EEF2FA; border: 1px solid #B0C4DA; }
+  .zone-4 { background: #FEF0EC; border: 1px solid #E8B8A8; }
+  .zone-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 10px; padding: 3px 12px 3px 8px;
+    border-radius: 4px;
+  }
+  .zone-badge-1 { background: #F5D5D8; border: 1px solid #E8B4B8; }
+  .zone-badge-2 { background: #B2E0D6; border: 1px solid #8ECFC4; }
+  .zone-badge-3 { background: #D0DCE8; border: 1px solid #B0C4DA; }
+  .zone-badge-4 { background: #F5D8CC; border: 1px solid #E8B8A8; }
+  .zone-num {
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font: 700 10px Georgia, serif; color: #fff;
+  }
+  .zone-num-1 { background: #9B2335; }
+  .zone-num-2 { background: #0D6B5E; }
+  .zone-num-3 { background: #3D5A80; }
+  .zone-num-4 { background: #B85C3A; }
+  .zone-label { font: 700 9px Georgia, serif; letter-spacing: 2px; text-transform: uppercase; }
+  .zone-label-1 { color: #9B2335; }
+  .zone-label-2 { color: #0D6B5E; }
+  .zone-label-3 { color: #3D5A80; }
+  .zone-label-4 { color: #B85C3A; }
+  .row { display: grid; gap: 10px; margin-bottom: 10px; }
+  .row:last-child { margin-bottom: 0; }
+  .row-full { grid-template-columns: 1fr; }
+  .row-half { grid-template-columns: 1fr 1fr; }
+  .field {
+    background: #FFFFFF; border-radius: 6px;
+    padding: 10px 14px; position: relative;
+    border: 1px solid rgba(0,0,0,0.07);
+  }
+  .field-z1 { border-left: 3.5px solid #9B2335; }
+  .field-z2 { border-left: 3.5px solid #0D6B5E; }
+  .field-z3 { border-left: 3.5px solid #3D5A80; }
+  .field-z4 { border-left: 3.5px solid #B85C3A; }
+  .field-num {
+    position: absolute; top: 8px; right: 10px;
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font: 700 9px Georgia, serif;
+  }
+  .field-num-1 { background: #F5D5D8; border: 1px solid #E8B4B8; color: #9B2335; }
+  .field-num-2 { background: #B2E0D6; border: 1px solid #8ECFC4; color: #0D6B5E; }
+  .field-num-3 { background: #D0DCE8; border: 1px solid #B0C4DA; color: #3D5A80; }
+  .field-num-4 { background: #F5D8CC; border: 1px solid #E8B8A8; color: #B85C3A; }
+  .field-header {
+    display: flex; align-items: center; gap: 7px;
+    margin-bottom: 7px; padding-right: 28px;
+  }
+  .field-icon { font-size: 15px; line-height: 1; }
+  .field-title { font: 700 12px Georgia, serif; }
+  .field-title-1 { color: #9B2335; }
+  .field-title-2 { color: #0D6B5E; }
+  .field-title-3 { color: #3D5A80; }
+  .field-title-4 { color: #B85C3A; }
+  .field-rows { display: flex; flex-direction: column; gap: 2px; }
+  .field-row { display: flex; gap: 6px; font-size: 10.5px; line-height: 1.5; }
+  .field-row-label {
+    font-weight: 700; min-width: 76px; flex-shrink: 0;
+    font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.3px;
+    padding-top: 1px;
+  }
+  .field-row-label-1 { color: #9B2335; }
+  .field-row-label-2 { color: #0D6B5E; }
+  .field-row-label-3 { color: #3D5A80; }
+  .field-row-label-4 { color: #B85C3A; }
+  .field-row-text { color: #3a3a4a; }
+  .field-text { font-size: 11px; line-height: 1.6; color: #3a3a4a; }
+
+  .watermark {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-2deg);
+    font: 700 14px Georgia, serif;
+    letter-spacing: 6px; text-transform: uppercase;
+    color: rgba(13,107,94,0.07);
+    pointer-events: none; white-space: nowrap;
+  }
+
+  .footer {
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid #ddd; padding-top: 8px; margin-top: 14px;
+  }
+  .footer-left { font-size: 9.5px; color: #999; font-style: italic; }
+  .footer-right { font-size: 9px; color: #bbb; }
+  @media print {
+    body { padding: 10px; }
+    .flow-indicator { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-bar">
+      <h1>Multi-Agent Architecture Canvas</h1>
+      <span class="course">94815 · Agentic Technologies · L6</span>
+    </div>
+    <div class="subtitle"><strong>The AI Bidding War — Phase 2 solution (April 2026)</strong>: Hub-and-spoke procurement simulation — Buyer + three isolated vendors (A/B/C), Strategic Audit (<code>agents/advisor.py</code>), human gatekeeper, deterministic <code>award_contract</code>, optional governance nudges. <strong>Buyer broadcast confidentiality:</strong> same assistant text goes to every vendor as <code>buyer_reply_prev</code>; <code>agents/buyer/agent.md</code> + <code>_PUBLIC_BROADCAST_BUYER_APPEND</code> constrain cross-vendor leakage for standard scenarios; <code>scenario_relax_public_broadcast</code> defaults to relaxing that append for <code>mode: malicious</code> (see <code>docs/Future Roadmap/PHASE_3_IMPLEMENTATION.md</code>). <strong>Evaluation set:</strong> <strong>11</strong> scripted scenarios (<code>config/scenarios.json</code>, IDs 1–11). <strong>Measured results</strong> in <code>evaluation/FINAL_EVALUATION_REPORT.md</code>. Track A · Asli Gulcur.</div>
+  </div>
+
+  <div class="container canvas">
+    <div class="flow-indicator"></div>
+
+    <!-- ═══════ ZONE 1: AGENT DESIGN & REASONING ═══════ -->
+    <div class="zone zone-1">
+      <div class="zone-badge zone-badge-1">
+        <span class="zone-num zone-num-1">1</span>
+        <span class="zone-label zone-label-1">Agent Design & Reasoning</span>
+      </div>
+      <div class="row row-half">
+        <div class="field field-z1">
+          <div class="field-num field-num-1">1</div>
+          <div class="field-header">
+            <span class="field-icon">🧠</span>
+            <span class="field-title field-title-1">Agent Model Strategy</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-1">Per Agent</span>
+              <span class="field-row-text">One Anthropic Claude model per <code>ANTHROPIC_MODEL</code> in <code>.env</code> (default Sonnet-class) for Buyer, Vendors A/B/C, Strategic Advisor (<code>agents/advisor.py</code>), and offline CFO narrative (<code>scripts/cfo_monthly_report.py</code>). Same API stack; roles differ by system prompts in <code>agents/</code> (buyer, vendors, cfo_narrative) <code>agent.md</code> files, not by model ID.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-1">Homogeneous</span>
+              <span class="field-row-text">Heterogeneous <em>roles</em>, homogeneous <em>model family</em>: simplifies operations and keeps negotiation dynamics attributable to isolation and personas rather than mixed model behavior. Malicious buyer uses the same stack with a different <code>agent.md</code> path when scenarios enable it.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-1">Profiling</span>
+              <span class="field-row-text">Buyer (standard vs malicious), three vendor personas (premium / budget / mid-tier with distinct floors), Strategic Advisor audit prompt (<code>ADVISOR_SYSTEM_PROMPT</code>), offline <strong>CFO portfolio narrative</strong> (<code>agents/cfo_narrative/agent.md</code> + <code>scripts/cfo_monthly_report.py</code> → <code>CFO Reports/</code>) — executive-facing rollup of evidence logs, not in the live loop (Phase 2 §5.7). All Markdown personas + orchestrator-constructed user messages; no fine-tuning.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field field-z1">
+          <div class="field-num field-num-1">2</div>
+          <div class="field-header">
+            <span class="field-icon">⚙️</span>
+            <span class="field-title field-title-1">Individual Behavior Implementation</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-1">Cognitive</span>
+              <span class="field-row-text"><code>orchestrator.py</code> drives discrete turns: per round, vendors A→B→C then Buyer — each step is a single LLM completion (not an unbounded ReAct loop). Proposed award triggers Strategic Audit (<code>run_strategic_audit</code> / <code>_emit_strategic_audit</code>), then human yes/no, then deterministic <code>award_contract</code> (no LLM on that path). If the Advisor API fails, orchestrator substitutes a logged <strong>Advisor error</strong> stub and still proceeds to human approval — traceable, not silent.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-1">Spatial</span>
+              <span class="field-row-text">Anthropic API only. Each vendor thread is isolated: round 1 sees RFP + scenario framing + <strong>isolation footer</strong>; later rounds see only <code>buyer_reply_prev</code> (identical buyer assistant text for A/B/C), not other vendors’ raw bids. Buyer sees aggregated <code>bid_summary</code> (parsed <code>BID_JSON</code>). <strong>Public channel:</strong> buyer system prompt includes public-broadcast rules + runtime append for standard runs; malicious scenarios may omit append via <code>scenario_relax_public_broadcast</code>. At award time, <code>format_negotiation_history</code> stitches buyer hub + all three vendor threads for the Advisor — not shown to vendors during negotiation.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-1">Temporal</span>
+              <span class="field-row-text">Fixed turn order within a round; up to <strong>three rounds</strong> per scenario; session ends on award, <code>NO_AWARD</code>, or round limit. Wall-clock bounded by API latency; no simulated calendar time between rounds.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row row-full">
+        <div class="field field-z1">
+          <div class="field-num field-num-1">3</div>
+          <div class="field-header">
+            <span class="field-icon">⏱️</span>
+            <span class="field-title field-title-1">Temporal Dynamics & Simulation Model</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-1">Time model</span>
+              <span class="field-row-text"><strong>Discrete negotiation rounds</strong> — event-driven steps (each vendor reply, buyer reply, optional audit/gate) rather than continuous-time market simulation.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-1">Sync</span>
+              <span class="field-row-text">Orchestrator is the barrier: vendors run sequentially in-process; buyer runs after bids are parsed; audit runs only after parseable <code>AWARD_JSON</code>.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-1">Lag effects</span>
+              <span class="field-row-text">No incubation or delayed settlement — immediate logging to <code>logs/scenario_*.log</code> and <code>logs/evidence_log_*.json</code> after each step.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-1">Horizon</span>
+              <span class="field-row-text">Single CLI session per <code>orchestrator.py --id &lt;N&gt;</code> with <strong>N ∈ 1–11</strong> (Phase 2 scenario roster); batch or interactive acceptable; not real-time market hours.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ ZONE 2: STRUCTURE IMPLEMENTATION ═══════ -->
+    <div class="zone zone-2">
+      <div class="zone-badge zone-badge-2">
+        <span class="zone-num zone-num-2">2</span>
+        <span class="zone-label zone-label-2">Structure Implementation</span>
+      </div>
+
+      <div class="row row-full">
+        <div class="field field-z2">
+          <div class="field-num field-num-2">4</div>
+          <div class="field-header">
+            <span class="field-icon">🔀</span>
+            <span class="field-title field-title-2">Orchestration & Organizational Architecture</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Pattern</span>
+              <span class="field-row-text"><strong>Hub-and-spoke</strong>: central <code>orchestrator.py</code> (control plane) invokes Buyer + three vendor workers; sequential vendor phase then buyer phase each round. Award path: audit → human → skill — not a debate or voting ensemble.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Static/Dyn</span>
+              <span class="field-row-text">Static roster (Buyer + Vendors A/B/C + on-demand Advisor); scenario parameters from <code>config/scenarios.json</code>. Phase 2 implements <strong>11</strong> scenario IDs (expanded from six Phase 1 archetypes) including HIPAA/GDPR, rip-and-replace, bid steering, conflict-of-interest, and other <strong>boundary</strong> cases — each with explicit governance vs negotiation baselines in <code>evaluation/evaluation_rubric.md</code> §2. No runtime agent spawning.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Sync</span>
+              <span class="field-row-text">Round boundaries; after human <code>no</code>, optional <strong>governance nudge</strong> steers the buyer’s next message; a new <code>AWARD_JSON</code> triggers <strong>re-audit</strong> before approval. Vendors are not recalled from the nudge gate alone — next round follows orchestrator rules (Phase 2 §5.4).</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Adaptive</span>
+              <span class="field-row-text">Nudge path and revised <code>AWARD_JSON</code> / <code>NO_AWARD</code>; re-audit on revised awards — no new agent types spawned mid-session.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Finalize</span>
+              <span class="field-row-text">If no contract executed after the round loop, <code>orchestrator.py</code> runs a <strong>finalization</strong> segment: buyer must emit <code>AWARD_JSON</code> (in-budget) or explicit <code>NO_AWARD</code>. That path can repeat the same <strong>Strategic Audit → human approval → <code>award_contract</code></strong> sequence as in-round awards (see diagram footnote in <code>docs/System Architecture Diagram/ai_bidding_war_system_architecture.svg</code>).</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row row-half">
+        <div class="field field-z2">
+          <div class="field-num field-num-2">5</div>
+          <div class="field-header">
+            <span class="field-icon">📡</span>
+            <span class="field-title field-title-2">Communication Infrastructure</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Mechanism</span>
+              <span class="field-row-text">In-process Python: structured user/assistant messages to Anthropic; no separate message bus. Human input via terminal prompts at gate.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Schema</span>
+              <span class="field-row-text">Line-embedded <code>BID_JSON:</code> and <code>AWARD_JSON:</code> JSON; orchestrator parses; evidence serialized in <code>evidence_log_*.json</code>.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Protocol</span>
+              <span class="field-row-text">Custom application protocol; repo layout compatible with OpenClaw-style <code>agent.md</code> / <code>skills/</code> packaging for external tooling — not MCP/A2A between agents in the live loop.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field field-z2">
+          <div class="field-num field-num-2">6</div>
+          <div class="field-header">
+            <span class="field-icon">🗄️</span>
+            <span class="field-title field-title-2">Environment & Grounding Infrastructure</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Per Agent</span>
+              <span class="field-row-text">LLM: Anthropic client only. Deterministic <code>skills/award_contract.py</code> for executed awards (writes <code>logs/contract.txt</code> when allowed). Vendors: no tools beyond text generation.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Shared</span>
+              <span class="field-row-text">In-memory orchestrator state: <code>vendor_histories</code>, <code>conversation_buyer</code>, <code>buyer_reply_prev</code>, parsed bid summaries — not a shared vector DB.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Denied</span>
+              <span class="field-row-text">Vendors cannot read each other’s threads or raw bids. They do see the <strong>same</strong> buyer prose; policy + runtime append reduce (not guarantee) restating others’ prices in that text. No live supplier APIs or email in v1.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Cold start</span>
+              <span class="field-row-text"><strong>Inputs at startup only:</strong> <code>.env</code>, <code>config/scenarios.json</code>, and per-role <code>agent.md</code> files under <code>agents/</code> — not prior <code>logs/</code> as control-plane inputs. <strong>During and after a run:</strong> session outputs include append-style <code>scenario_*.log</code> and <code>evidence_log_*.json</code>, plus optional <code>contract.txt</code> (overwritten on each successful award — not a multi-run history). These are <strong>outputs</strong> for humans and offline tools (harvest, CFO narrative); they do not reload into the orchestrator as cold-start state (aligns with system architecture diagram: control plane vs Zone 5 run outputs).</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row row-full">
+        <div class="field field-z2">
+          <div class="field-num field-num-2">7</div>
+          <div class="field-header">
+            <span class="field-icon">📐</span>
+            <span class="field-title field-title-2">Scale & Computational Architecture</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Agent count</span>
+              <span class="field-row-text">Fixed: 1 Buyer + 3 Vendors + Strategic Advisor (invoked on award path); optional <code>malicious_buyer</code> persona swap per scenario — still one buyer instance.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Compute</span>
+              <span class="field-row-text">Local Python 3.10+ or Docker; LLM inference on Anthropic cloud; no elastic multi-node orchestration.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Mapping</span>
+              <span class="field-row-text">Single OS process; sequential API calls; parallelism not required for correctness (isolation is logical).</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-2">Constraints</span>
+              <span class="field-row-text">Three-round cap; hard budget ceiling enforced in Python (default $15,000); token usage per course/API limits. Harvest / export policy selects newest log per scenario ID; <strong>latency/stability</strong> not primary scored columns per <code>FINAL_EVALUATION_REPORT.md</code> §2.2 (Phase 2 plan).</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="watermark">Structure Implementation</div>
+    </div>
+
+    <!-- ═══════ ZONE 3: COLLECTIVE BEHAVIOR & QUALITY ═══════ -->
+    <div class="zone zone-3">
+      <div class="zone-badge zone-badge-3">
+        <span class="zone-num zone-num-3">3</span>
+        <span class="zone-label zone-label-3">Collective Behavior & Quality</span>
+      </div>
+
+      <div class="row row-half">
+        <div class="field field-z3">
+          <div class="field-num field-num-3">8</div>
+          <div class="field-header">
+            <span class="field-icon">🤝</span>
+            <span class="field-title field-title-3">Coordination Strategy & Mechanism</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Strategy</span>
+              <span class="field-row-text"><strong>Role-based</strong> procurement: buyer competes for best offer; vendors do not coordinate. Evaluation uses <strong>two layers</strong> (Phase 2 / rubric): <strong>Governance</strong> — isolation, audit before award, guardrail, HITL traces; <strong>Negotiation</strong> — scenario-specific procurement goals. A run can governance-pass and negotiation-partial/fail and still be a valid evidence row.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Execution</span>
+              <span class="field-row-text">Turn-taking and parsing; Strategic Audit facilitates human oversight, not vendor–vendor consensus. Scoring references <code>evaluation/test_cases.csv</code> and <code>FINAL_EVALUATION_REPORT.md</code> §3.2, not chat prose alone.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Decision</span>
+              <span class="field-row-text">Buyer proposes award; <strong>human</strong> approves or vetoes execution; <strong>guardrail</strong> is dictatorial on price vs ceiling (blocks illegal spend even if prose claims success).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field field-z3">
+          <div class="field-num field-num-3">9</div>
+          <div class="field-header">
+            <span class="field-icon">🔍</span>
+            <span class="field-title field-title-3">Emergent Behavior Detection & Steering</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Conflict</span>
+              <span class="field-row-text">Competitive bids surfaced only to buyer as structured summary; no cross-vendor negotiation — reduces collusion by design. If buyer prose compares bids, all vendors may infer competitors’ numbers (mitigated for standard mode via public-broadcast rules).</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Circuit-break</span>
+              <span class="field-row-text"><code>award_contract</code> rejects over-ceiling prices; max rounds; session termination in orchestrator. Advisor API failure → logged stub, flow continues to human (no silent skip of audit slot).</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Herd check</span>
+              <span class="field-row-text">Separate threads and distinct personas limit uncritical agreement across vendors.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Drift</span>
+              <span class="field-row-text">Short horizon (3 rounds); audit compares proposal to RFP; human can veto.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row row-full">
+        <div class="field field-z3">
+          <div class="field-num field-num-3">10</div>
+          <div class="field-header">
+            <span class="field-icon">✔️</span>
+            <span class="field-title field-title-3">Verification & Conflict Resolution</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Evidence</span>
+              <span class="field-row-text">Transcripts in <code>logs/</code>; <code>python scripts/export_evaluation.py</code> runs harvest → rubric §3 fill → tables → failure log → syncs <strong>§3.2</strong> and <strong>Appendix A</strong> in <code>FINAL_EVALUATION_REPORT.md</code>. Harvested CSVs (<code>test_cases.csv</code>, etc.) encode governance vs negotiation columns per Phase 2 methodology.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Separation</span>
+              <span class="field-row-text">Strategic Audit output is advisory text for the human; executable spend is only through <code>award_contract</code> after approval — LLM cannot unilaterally commit budget.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Contradiction</span>
+              <span class="field-row-text">Human veto yields <code>NO_AWARD</code> with logged rationale; over-ceiling blocked with ERROR string — no arbitration between vendors required.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Gaps</span>
+              <span class="field-row-text"><code>NO_AWARD</code> and negotiation partial/fail with governance pass are valid rows. Boundary / failure narratives: e.g. scenario 2 (guardrail stress), 3 (finance squeeze), 6 (compromised pressure), plus compliance-heavy IDs (7, 10, …) per §3.3 / Appendix A in the report.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row row-full">
+        <div class="field field-z3">
+          <div class="field-num field-num-3">11</div>
+          <div class="field-header">
+            <span class="field-icon">🎯</span>
+            <span class="field-title field-title-3">Calibration & Validation Protocol</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Data feeds</span>
+              <span class="field-row-text">Scripted scenarios in <code>config/scenarios.json</code>; logs as ground truth for harvest — not live procurement feeds.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Fit metrics</span>
+              <span class="field-row-text">Canonical criteria: <code>FINAL_EVALUATION_REPORT.md</code> §2 + <code>evaluation/evaluation_rubric.md</code> §2 per-scenario baselines. Harvest fields include <code>Outcome_Reason</code>, rounds, savings vs budget, feasibility band, <code>Metrics_Audit</code>, etc. (see harvest script docstring).</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Frequency</span>
+              <span class="field-row-text">After new runs: <code>python scripts/export_evaluation.py</code> (or stepwise harvest / fill §3 / generate tables). Report metadata records evidence snapshot date; Phase 2 narrative §8 = plan, report = scored snapshot.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-3">Benchmarks</span>
+              <span class="field-row-text">Course rubric and internal baselines; AgenticPay/Jannelli cited for methodology framing in related work — not external negotiation benchmarks.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ ZONE 4: STATE, PLANNING & TRADE-OFFS ═══════ -->
+    <div class="zone zone-4">
+      <div class="zone-badge zone-badge-4">
+        <span class="zone-num zone-num-4">4</span>
+        <span class="zone-label zone-label-4">State, Planning & Trade-Offs</span>
+      </div>
+
+      <div class="row row-half">
+        <div class="field field-z4">
+          <div class="field-num field-num-4">12</div>
+          <div class="field-header">
+            <span class="field-icon">💾</span>
+            <span class="field-title field-title-4">State Management & Feedback Architecture</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Shared</span>
+              <span class="field-row-text">Orchestrator holds hub state; append-only logs on disk for replay and harvest.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Private</span>
+              <span class="field-row-text">Per-vendor message lists; buyer cumulative conversation; advisor does not retain state between invocations beyond the API call context.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Feedback</span>
+              <span class="field-row-text">Human rejection → optional nudge → buyer revises → new <code>AWARD_JSON</code> re-enters <strong>Strategic Audit</strong> before another approval attempt (Phase 2 gate sequence).</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Lifecycle</span>
+              <span class="field-row-text">Session-scoped negotiation state (<code>vendor_histories</code>, <code>conversation_buyer</code>, <code>buyer_reply_prev</code>); no cross-session memory for buyer/vendors. Offline <strong>CFO narrative</strong> (<code>CFO Reports/CFO_narrative_&lt;YYYY-MM&gt;.md</code>) aggregates <code>evidence_log_*.json</code> by month for portfolio reporting — separate from in-run audit.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field field-z4">
+          <div class="field-num field-num-4">13</div>
+          <div class="field-header">
+            <span class="field-icon">📋</span>
+            <span class="field-title field-title-4">Task Decomposition & Planning</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Method</span>
+              <span class="field-row-text">Goal fixed per scenario ID (1–11): RFP, budgets, ceilings, modes (e.g. malicious buyer) from <code>config/scenarios.json</code> — not LLM-generated task DAG; bounded rounds substitute for open-ended planning.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Assignment</span>
+              <span class="field-row-text">Orchestrator assigns vendor/buyer/advisor roles by phase; buyer “plans” in natural language within rounds.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Assembly</span>
+              <span class="field-row-text">Parsed bids → buyer decision → optional award → audit + gate → contract file or abort; if rounds end without a contract, <strong>finalization</strong> buyer turn may repeat audit → gate → guardrail for a last <code>AWARD_JSON</code> / <code>NO_AWARD</code>.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Adaptive</span>
+              <span class="field-row-text">Nudge and revised buyer messages after veto; no dynamic scenario rewriting mid-run.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row row-full">
+        <div class="field field-z4">
+          <div class="field-num field-num-4">14</div>
+          <div class="field-header">
+            <span class="field-icon">⚖️</span>
+            <span class="field-title field-title-4">Trade-Off Priorities</span>
+          </div>
+          <div class="field-rows">
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Priority 1</span>
+              <span class="field-row-text"><strong>Governance and traceability</strong> (isolation, audit, HITL, deterministic spend) over maximizing deal count or model creativity.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Priority 2</span>
+              <span class="field-row-text"><strong>Simulation fidelity</strong> (asymmetric info, structured evidence) over lowest API cost or sub-second latency — latency/stability not primary scored columns.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Accept</span>
+              <span class="field-row-text">LLM variance across runs; three-round cap; manual human gate; synthetic vendors; evaluation from harvested logs, not production ROI.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-row-label field-row-label-4">Reject</span>
+              <span class="field-row-text">Live vendor integrations, legal contract generation, dynamic agent spawning, unbounded negotiation horizon, cross-session buyer memory — explicit v1 out-of-scope.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container footer">
+    <span class="footer-left">Phase 2+ — hub-and-spoke isolation, buyer public-broadcast policy, Strategic Audit + HITL + deterministic guardrail, 11-scenario evaluation (<code>evaluation/</code>); architecture diagram <code>docs/System Architecture Diagram/</code>. Phase 3 backlog: per-vendor buyer text / redaction (<code>docs/Future Roadmap/PHASE_3_IMPLEMENTATION.md</code>).</span>
+    <span class="footer-right">Carnegie Mellon University · Heinz College</span>
+  </div>
+  <div class="container" style="text-align:center; margin-top:10px; padding-top:6px; border-top:1px solid #e0e0e0;">
+    <span style="font-size:9px; color:#888; font-style:italic;">Canvas framework by Prof. Anand S. Rao (anandr2@andrew.cmu.edu) · CMU Heinz College of Information Systems and Public Policy · Project content: Asli Gulcur</span>
+  </div>
+</div>
+
+</body>
+</html>

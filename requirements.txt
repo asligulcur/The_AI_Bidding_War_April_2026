@@ -1,0 +1,8 @@
+# Runtime + export pipeline (pip install -r requirements.txt)
+# External tools (not pip): pandoc + Google Chrome for PDF scripts; `dot` on PATH for scripts/generate_v2_diagram.py
+anthropic>=0.40.0
+python-dotenv>=1.0.0
+pyyaml>=6.0.0
+graphviz>=0.20.0
+markdown>=3.5
+xhtml2pdf>=0.2.11

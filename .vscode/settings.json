@@ -1,0 +1,5 @@
+{
+  "terminal.integrated.env.osx": {
+    "PATH": "/Users/asligulcur/.npm-global/bin:${env:PATH}"
+  }
+}

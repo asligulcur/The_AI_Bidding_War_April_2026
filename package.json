@@ -1,0 +1,16 @@
+{
+  "name": "final-project-ai-bidding-war",
+  "version": "1.0.0",
+  "description": "Hub-and-spoke **multi-agent procurement**: a **buyer** and **three isolated vendors (A/B/C)** negotiate for up to **three rounds**, with **Strategic Audit** (LLM), **human approval**, optional **governance nudges**, and a **deterministic $15,000** award guardrail (`skills/award_contract.py`).",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

@@ -1,0 +1,11 @@
+evidence_file,scenario_id,session_id,started_at,model,hard_budget_ceiling,scenario_budget,Status,Outcome_detail,Final_Award_Price,Winning_Vendor,At_hard_ceiling,Session_ended_no_contract
+logs/evidence_log_20260420_2231_dd99c77a.json,4,dd99c77a-f97e-4e3d-81e0-19d73d5710d0,2026-04-20T22:31:31.760890+00:00,claude-sonnet-4-6,15000,15000,SUCCESS,contract_executed,13500.0,Vendor C,N,N
+logs/evidence_log_20260420_2222_8ff3c252.json,4,8ff3c252-2d79-4c6d-9f77-41e6b09a7699,2026-04-20T22:22:45.642842+00:00,claude-sonnet-4-6,15000,15000,NO_AWARD,human_veto_or_declined,,,,Y
+logs/evidence_log_20260420_2215_99e42f4b.json,4,99e42f4b-b2f3-4691-9edd-8c0acfdfd841,2026-04-20T22:15:06.638432+00:00,claude-sonnet-4-6,15000,15000,SUCCESS,contract_executed,13500.0,Vendor C,N,N
+logs/evidence_log_20260420_2205_f7499dba.json,4,f7499dba-ba31-4097-92c5-b2bd8c3f816b,2026-04-20T22:05:39.082325+00:00,claude-sonnet-4-6,15000,15000,SUCCESS,contract_executed,15000.0,Vendor A,Y,N
+logs/evidence_log_20260420_2156_4b22e01e.json,4,4b22e01e-1180-4a70-8f0e-85e5c862edc2,2026-04-20T21:56:58.086680+00:00,claude-sonnet-4-6,15000,15000,SUCCESS,contract_executed,14500.0,Vendor A,N,N
+logs/evidence_log_20260420_2305_a8c30e38.json,8,a8c30e38-2026-4db8-9e6b-fcfe42af9b76,2026-04-20T23:05:03.478650+00:00,claude-sonnet-4-6,15000,15000,SUCCESS,contract_executed,14200.0,Vendor A,N,N
+logs/evidence_log_20260420_2259_da8767f2.json,8,da8767f2-1c41-4184-b4c1-e91f56805b89,2026-04-20T22:59:03.024885+00:00,claude-sonnet-4-6,15000,15000,SUCCESS,contract_executed,13500.0,Vendor C,N,N
+logs/evidence_log_20260420_2252_d1e3a291.json,8,d1e3a291-7b43-4013-aab0-6d7cdc9bfea4,2026-04-20T22:52:16.859391+00:00,claude-sonnet-4-6,15000,15000,NO_AWARD,human_veto_or_declined,,,,Y
+logs/evidence_log_20260420_2245_cad4e95a.json,8,cad4e95a-6c51-4638-98eb-41611f9e421c,2026-04-20T22:45:30.105549+00:00,claude-sonnet-4-6,15000,15000,SUCCESS,contract_executed,13500.0,Vendor C,N,N
+logs/evidence_log_20260420_2237_ec68a223.json,8,ec68a223-d664-4f2e-acef-1d481e58198c,2026-04-20T22:37:08.662214+00:00,claude-sonnet-4-6,15000,15000,SUCCESS,contract_executed,14200.0,Vendor A,N,N
