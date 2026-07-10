@@ -393,7 +393,7 @@
             </div>
             <div class="field-row">
               <span class="field-row-label field-row-label-3">Rules</span>
-              <span class="field-row-text">Executable spend: <code>skills/award_contract.py</code> enforces a <strong>fixed</strong> <code>BUYER_HARD_LIMIT</code> of <strong>$15,000</strong> (not parameterized per call). The orchestrator still loads per-scenario <code>hard_budget_ceiling</code> from <code>config/scenarios.json</code> for <strong>prompts and operator messaging</strong> — narrative may reference other figures, but over-$15k awards are rejected by the skill. Max rounds; parseable JSON lines for harvest; Advisor API error → logged stub.</span>
+              <span class="field-row-text">Executable spend: <code>skills/award_contract.py</code> enforces a <strong>fixed</strong> <code>BUYER_HARD_LIMIT</code> of <strong>$15,000</strong> (a per-scenario <code>hard_budget_ceiling</code> can only tighten it, never exceed the $15k cap). The orchestrator still loads per-scenario <code>hard_budget_ceiling</code> from <code>config/scenarios.json</code> for <strong>prompts and operator messaging</strong> — narrative may reference other figures, but over-$15k awards are rejected by the skill. Max rounds; parseable JSON lines for harvest; Advisor API error → logged stub.</span>
             </div>
             <div class="field-row">
               <span class="field-row-label field-row-label-3">Termination</span>

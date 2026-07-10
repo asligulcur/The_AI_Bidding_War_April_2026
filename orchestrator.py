@@ -696,7 +696,7 @@ def main() -> None:
                 )
 
                 if human in ("yes", "y"):
-                    result = award_contract(name, price)
+                    result = award_contract(name, price, hard_ceiling)
                     _append_evidence(
                         evidence,
                         {
@@ -913,7 +913,7 @@ def main() -> None:
                 )
 
                 if human in ("yes", "y"):
-                    result = award_contract(name, price)
+                    result = award_contract(name, price, hard_ceiling)
                     _append_evidence(
                         evidence,
                         {
