@@ -66,7 +66,7 @@ Use these when you need **stronger** isolation, **automated** cleanup, or **expl
 
 - **When to invest in Phase 3:** Only if you must **claim** that competitor-specific numbers never appear in vendor-visible text — then prioritize **Option A** (per-vendor buyer messages); more prompt tuning is not a substitute.
 
-- **Lightweight next step (if needed):** Add a short limitation paragraph in Phase 2 narrative or **`Phase3_AI_USAGE.pdf`** pointing here; revisit Phase 3 only after feedback or a new project phase.
+- **Lightweight next step (if needed):** Add a short limitation paragraph in the project narrative pointing here; revisit this backlog only after feedback or a new iteration.
 
 ---
 
@@ -89,6 +89,6 @@ Use these when you need **stronger** isolation, **automated** cleanup, or **expl
 |----------|-------------------|
 | **Code** | `orchestrator.py` (core); possibly new module for redaction or per-vendor prompt builders; `agents/buyer/agent.md` if buyer instructions change |
 | **Config** | `config/scenarios.json` if new flags or behaviors per scenario |
-| **Docs** | `README.md`; Phase 2 archive (`docs/Phase 2/*.pdf`); `docs/Phase 3/Phase3_AI_USAGE.pdf`; `evaluation/evaluation_rubric.md` if scoring assumptions change |
+| **Docs** | `README.md`; `evaluation/evaluation_rubric.md` if scoring assumptions change |
 | **Diagrams / canvases** | `docs/System Architecture Diagram/*` if message flow changes; refresh MA / component canvases to match new data paths |
 | **Tests / logs** | Any `scripts/` or harvest steps that assume a single `buyer_reply_prev`; add regression checks against sample logs if you add redaction |

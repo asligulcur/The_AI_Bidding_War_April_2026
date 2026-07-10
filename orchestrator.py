@@ -304,7 +304,7 @@ def buyer_reply_after_governance_nudge(
     Preserves distance between advisor critique and buyer response.
 
     Compliance with the nudge is not guaranteed: the buyer LLM may fully
-    accept, partially reflect, or decline the instruction; see docs/Phase 3/Phase3_AI_USAGE.pdf.
+    accept, partially reflect, or decline the instruction.
     """
     user_msg = (
         "[Governance — Human gatekeeper]\n\n"

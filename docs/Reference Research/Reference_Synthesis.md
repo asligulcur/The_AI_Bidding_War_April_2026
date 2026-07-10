@@ -32,7 +32,7 @@ This section satisfies **high- and medium-priority** items from the instructor r
 
 ### Procurement cycle time & ROI context (Phase 2 problem framing)
 
-These sources support **`docs/Phase 2/Phase_2_The_AI_Bidding_War_REVISED.md`** **Problem Statement** (why multi-week negotiation cycles—not instant bid collection—motivate structured agentic negotiation). Figures below are **as reported** in each source; they are **not** project-specific measurements.
+These sources support the project's **Problem Statement** (why multi-week negotiation cycles—not instant bid collection—motivate structured agentic negotiation). Figures below are **as reported** in each source; they are **not** project-specific measurements.
 
 #### World Commerce & Contracting (WorldCC)
 

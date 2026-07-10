@@ -46,4 +46,4 @@ If the orchestrator includes a **“Buyer-only brief”** block in your user tur
 
 ## LLM alignment (short)
 
-Aligned models **sometimes** refuse full roleplay (e.g. transparency disclaimers). That **limits transcript drama** but is **not** an engine bug; **`award_contract`**, Strategic Audit, and HITL still apply. Model snapshot changes may shift compliance—see **`docs/Phase 3/Phase3_AI_USAGE.pdf`**.
+Aligned models **sometimes** refuse full roleplay (e.g. transparency disclaimers). That **limits transcript drama** but is **not** an engine bug; **`award_contract`**, Strategic Audit, and HITL still apply. Model snapshot changes may shift compliance.
