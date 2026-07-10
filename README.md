@@ -104,7 +104,7 @@ The public `requirements` string is what vendors see; internal targets, ceilings
 
 ## Evaluation approach
 
-The evaluation pipeline (`python scripts/export_evaluation.py`) harvests the committed `logs/` into CSVs, a rubric, a failure log, and a generated report under `evaluation/`. Reading those committed artifacts needs no API key; regenerating them from new runs does.
+The evaluation pipeline (`python scripts/export_evaluation.py`) harvests any local `logs/` (transcripts are gitignored, so a fresh clone has none) and merges them into the committed `evaluation/` artifacts — CSVs, a rubric, a failure log, and a generated report. Reading those committed artifacts needs no API key; regenerating them from new runs does.
 
 The design principle worth highlighting: **separate code-enforced outcomes from LLM prose**, so a dramatic-looking transcript is never mistaken for a real control. The evaluation distinguishes four layers of claim:
 
@@ -141,7 +141,7 @@ The design principle worth highlighting: **separate code-enforced outcomes from 
 | `config/scenarios.json` | The 11 scenarios, vendor floors, ceiling |
 | `scripts/export_evaluation*` | Evidence harvest → CSVs, rubric, report pipeline |
 | `evaluation/` | Generated results, rubric, failure log, multi-seed variance |
-| `logs/` | Per-session transcripts (`scenario_*.log`) and evidence (`evidence_log_*.json`) |
+| `logs/` | Per-session transcripts (`scenario_*.log`) and evidence (`evidence_log_*.json`) — gitignored, generated at runtime |
 | `docs/` | Architecture diagram, agent/spec canvases, extended reports, roadmap |
 
 Author: Asli Gulcur.

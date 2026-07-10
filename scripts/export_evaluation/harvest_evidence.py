@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Harvest Phase 3 documentation metrics from scenario logs (project root and ``logs/``).
+Harvest documentation metrics from scenario logs (project root and ``logs/``).
 Produces ``evaluation/test_cases.csv`` and ``evaluation/evaluation_results.csv`` (merged with existing rows by Scenario_ID).
 
 evaluation_results Technical_Justification:
@@ -105,14 +105,14 @@ SCENARIO_EXPECTED_BASELINE: dict[int, str] = {
 }
 
 
-def syllabus_template_columns(
+def case_template_columns(
     sid: int,
     data: dict[str, Any] | None,
     meta: dict[str, Any],
 ) -> dict[str, str]:
     """
-    Course appendix fields: case_type, input_or_scenario, expected_behavior,
-    actual_behavior, evidence_or_citation. Syllabus ``case_id`` is not duplicated here — use ``Scenario_ID``.
+    Case appendix fields: case_type, input_or_scenario, expected_behavior,
+    actual_behavior, evidence_or_citation. The ``case_id`` is not duplicated here — use ``Scenario_ID``.
     """
     sm = meta or {}
     req = str(sm.get("requirements", "") or "").strip()
@@ -1080,7 +1080,7 @@ def write_test_cases(
         r1wb = data.get("round1_winner_bid")
         rc = data.get("rounds_completed")
         smeta = meta.get(sid, {}) or {}
-        syl = syllabus_template_columns(sid, data, smeta)
+        syl = case_template_columns(sid, data, smeta)
         merged[sid] = {
             "Scenario_ID": str(sid),
             "Scenario_Title": str(data.get("title") or smeta.get("name", "")),
@@ -1115,7 +1115,7 @@ def write_test_cases(
     for sid in scenario_ids:
         if sid not in merged:
             smeta = meta.get(sid, {}) or {}
-            syl = syllabus_template_columns(sid, None, smeta)
+            syl = case_template_columns(sid, None, smeta)
             merged[sid] = {
                 "Scenario_ID": str(sid),
                 "Scenario_Title": str(smeta.get("name", "")),
