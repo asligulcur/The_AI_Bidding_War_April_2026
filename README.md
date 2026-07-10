@@ -14,34 +14,15 @@ This project answers it concretely by separating three kinds of authority:
 
 The payoff: a compromised buyer agent can be instructed to force an over-budget award (scenario 2), the auditor can be bypassed, and a human can even approve the bad deal — and the contract still does not execute, because the ceiling is enforced in code, not in a prompt.
 
+![The deterministic guardrail defeating a red-team attack](docs/Screenshots/07_failure_case.png)
+
+*Exactly that, on camera — Scenario 6 ("$17k emergency override"): a covert buyer-only brief tries to force an award above the $15,000 ceiling. The buyer refuses across all three rounds and flags the attempt for compliance review; the human vetoes at finalize — no contract is written.*
+
 ## Architecture
 
 Hub-and-spoke. The buyer is the hub; each vendor is an isolated spoke with its own conversation thread.
 
-```
-                         ┌────────────────────────────┐
-                         │   config/scenarios.json     │
-                         │   (RFP, budget, ceiling,    │
-                         │    floors, red-team briefs) │
-                         └──────────────┬──────────────┘
-                                        │
-   Vendor A ─┐        per-round bids    │   relayed buyer text (same for A/B/C)
-   Vendor B ─┼──────────────────────────▶  BUYER (hub)  ◀────── buyer_private_brief
-   Vendor C ─┘   (isolated threads;     │   sees only parsed        (never sent
-                  no cross-vendor view) │   bid JSON, negotiates      to vendors)
-                                        ▼
-                          STRATEGIC AUDIT  (agents/advisor.py)
-                          separate LLM call; reads full history,
-                          argues to REJECT; not fed back into the
-                          buyer's next vendor round
-                                        ▼
-                          HUMAN APPROVAL GATE  [yes / no]
-                          on 'no' → optional one-turn governance
-                          nudge to the buyer (no vendor call)
-                                        ▼
-                          award_contract()  ── deterministic ──
-                          price ≤ $15,000 ? execute : reject
-```
+![The AI Bidding War system architecture — a control plane (config, personas), a hub-and-spoke runtime where the buyer never lets vendors see each other, in-run strategic oversight, the human gate plus the deterministic $15,000 guardrail, and persisted run outputs.](docs/system-architecture.png)
 
 Governance flow, step by step:
 
@@ -53,9 +34,9 @@ Governance flow, step by step:
 
 Every turn is logged to a human-readable transcript (`logs/scenario_*.log`) and a structured evidence trail (`logs/evidence_log_*.json`).
 
-![Governance defense-in-depth on a red-team scenario](docs/Screenshots/07_failure_case.png)
+![A successful award, fully traceable from vendor bid to executed contract](docs/Screenshots/03_evidence_view.png)
 
-*Scenario 6 ("$17k emergency override"): a covert buyer-only brief tries to force an award above the $15,000 ceiling. The buyer refuses across all three rounds and flags the attempt for compliance review; the human then vetoes at finalize — no contract is written.*
+*A clean SUCCESS, fully auditable: three isolated vendor bids → the buyer proposes Vendor B at $12,500 → the Strategic Audit runs → the human first says "no" with a governance nudge ("assess support window") → then "yes" → the deterministic `award_contract` executes. Every step has a citable log line, and the audit always precedes approval.*
 
 ## Quickstart
 
