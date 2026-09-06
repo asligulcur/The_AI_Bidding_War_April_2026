@@ -133,4 +133,4 @@ The design principle worth highlighting: **separate code-enforced outcomes from 
 | `logs/` | Per-session transcripts (`scenario_*.log`) and evidence (`evidence_log_*.json`) — gitignored, generated at runtime |
 | `docs/` | Architecture diagram, agent/spec canvases, extended reports, roadmap |
 
-Author: Asli Gulcur.
+Author: [Asli Gulcur](https://asligulcur.github.io/).
