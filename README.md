@@ -1,6 +1,6 @@
 # The AI Bidding War
 
-A hub-and-spoke multi-agent procurement simulator: a buyer agent negotiates with three isolated vendor agents (A/B/C) over up to three rounds, under an LLM strategic-audit layer, human-in-the-loop approval gates, and a deterministic $15,000 ceiling enforced in code rather than in a prompt. Built on the Anthropic API.
+A hub-and-spoke multi-agent procurement simulator: a buyer agent negotiates with three isolated vendor agents (A/B/C) over up to three rounds, under an LLM strategic-audit layer, human-in-the-loop approval gates, and a deterministic budget ceiling enforced in code rather than in a prompt. Built on the Anthropic API.
 
 ## The problem
 
