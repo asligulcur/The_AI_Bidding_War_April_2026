@@ -2,6 +2,10 @@
 
 A hub-and-spoke multi-agent procurement simulator: a buyer agent negotiates with three isolated vendor agents (A/B/C) over up to three rounds, under an LLM strategic-audit layer, human-in-the-loop approval gates, and a deterministic budget ceiling enforced in code rather than in a prompt. Built on the Anthropic API.
 
+In plain terms: AI agents negotiate a software purchase, and the project tests whether a human approver and a hard-coded spending limit keep them in check, even when the buyer agent is told to cheat.
+
+*Built solo for CMU Heinz College's Agentic Technologies (April 2026), with AI coding assistance.*
+
 ## The problem
 
 Multi-agent LLM systems are increasingly asked to run consequential workflows — sourcing, negotiation, spend approval — where the model is non-deterministic and, under adversarial prompting, potentially misaligned with the operator's intent. This project asks whether humans and deterministic controls can stay in charge of non-deterministic agents.
@@ -14,7 +18,7 @@ This project answers it concretely by separating three kinds of authority:
 
 ## What the runs showed
 
-**The model upgrade moved the first line of defense.** The project ran on two Claude models. On Claude Sonnet 4 (March–April 12), the corrupt buyer played along: it proposed over-ceiling awards (e.g., Vendor A at $18,500 in scenario 2), and the code guardrail rejected 7 over-ceiling attempts in March test runs. After Anthropic's deprecation notice for Sonnet 4, the project moved to Claude Sonnet 4.6. In the April 18 runs, the buyer refused the corrupt persona in round 1 in all three red-team scenarios (2, 6, 10), so the guardrail was never reached. The code didn't change; the model's behavior did. That's why the ceiling lives in code: the next model may behave differently again.
+**The model upgrade moved the first line of defense.** The project ran on two Claude models. On Claude Sonnet 4 (March to mid-April), the corrupt buyer played along: in scenarios 2 and 6 it proposed awards above the $15,000 ceiling, and the code guardrail rejected every one. After Anthropic's deprecation notice for Sonnet 4, the project moved to Claude Sonnet 4.6. In the April 18 runs, the buyer refused the corrupt persona in round 1 in all three red-team scenarios (2, 6, 10), so the guardrail was never reached. The guardrail code didn't change; the model's behavior did. That's why the ceiling lives in code: the next model may behave differently again.
 
 In the April 18 runs (11 scenarios, one run each):
 
@@ -51,13 +55,13 @@ Every turn is logged to a human-readable transcript (`logs/scenario_*.log`) and 
 Requires Python 3.10+ and an Anthropic API key.
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/asligulcur/The_AI_Bidding_War_April_2026.git
 cd The_AI_Bidding_War_April_2026
 python3 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-# Provide your key (the app loads .env from the project root):
-echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
+# Add your key (the app loads .env from the project root):
+cp .env.example .env   # then paste your key into .env
 
 python orchestrator.py --id 1
 ```
@@ -72,7 +76,7 @@ Configuration (all optional except the key):
 |----------|---------|
 | `ANTHROPIC_API_KEY` | Required. |
 | `ANTHROPIC_MODEL` | Model id; defaults to `claude-sonnet-4-6` in code. |
-| `BUYER_TYPE` | Buyer agent folder; overridden by a scenario's `mode` when using `--id`. |
+| `BUYER_TYPE` | Buyer agent folder for standard scenarios (default `buyer`). Red-team scenarios always use `malicious_buyer`. |
 | `ORCHESTRATOR_CHAR_DELAY` | Typing-animation delay; `0` disables it. |
 
 ## Scenarios
