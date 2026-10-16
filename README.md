@@ -12,11 +12,12 @@ In plain terms: AI agents negotiate a software purchase, and the project tests w
 
 Multi-agent LLM systems are increasingly asked to run consequential workflows — sourcing, negotiation, spend approval — where the model is non-deterministic and, under adversarial prompting, potentially misaligned with the operator's intent. This project asks whether humans and deterministic controls can stay in charge of non-deterministic agents.
 
-It does this by separating three kinds of authority:
+The AI agents (buyer and vendors) are the unpredictable part: they can argue, bluff, refuse, or, in the red-team scenarios, try to cheat. Four safeguards sit around them, each a different kind of control:
 
-- **Non-deterministic behavior** lives in the LLM agents (buyer, vendors, auditor). They can argue, bluff, refuse, or — in the red-team scenarios — try to cheat.
-- **Human authority** lives at explicit approval gates. No contract executes without a typed `yes`.
-- **Deterministic authority** lives in code. `skills/award_contract.py` enforces `price ≤ $15,000` as a plain Python comparison. It is invoked *after* the human approves, and it will reject an over-ceiling award regardless of how persuasive, urgent, or "executive-approved" the buyer's prose was.
+- **Isolated vendor channels (code).** Each vendor has its own conversation thread and never sees another vendor's bid.
+- **Strategic audit (AI).** A separate model reviews every proposed award, looking for reasons to reject it, and reports to the human.
+- **Human approval (person).** No contract executes without a typed `yes`.
+- **Spending limit (code).** `skills/award_contract.py` enforces `price ≤ $15,000` as a plain Python comparison. It runs *after* the human approves, and it rejects an over-limit award however persuasive, urgent, or "executive-approved" the buyer's message was.
 
 ## What the runs showed
 
