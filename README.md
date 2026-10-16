@@ -6,7 +6,7 @@ In plain terms: AI agents negotiate a software purchase, and the project tests w
 
 *Built solo for CMU Heinz College's Agentic Technologies (April 2026), with AI coding assistance.*
 
-**[▶ Watch the 5-minute demo](https://drive.google.com/file/d/1vk5Ozn2RjHGPYoknsWaQLJjArb3yiUk4/view):** a corrupt buyer agent awards a $22,000 contract against a $15,000 limit. The AI auditor flags it, the human approves it anyway, and the spending limit in code still blocks it.
+**[▶ Watch the 5-minute demo](https://drive.google.com/file/d/1vk5Ozn2RjHGPYoknsWaQLJjArb3yiUk4/view):** a corrupt buyer agent awards a contract 47% over the spending limit. The AI auditor flags it, the human approves it anyway, and the limit in code still blocks it.
 
 ## The problem
 
