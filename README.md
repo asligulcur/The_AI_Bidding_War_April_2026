@@ -6,13 +6,13 @@ In plain terms: AI agents negotiate a software purchase, and the project tests w
 
 *Built solo for CMU Heinz College's Agentic Technologies (April 2026), with AI coding assistance.*
 
-**[▶ Watch the 5-minute demo](https://drive.google.com/file/d/1vk5Ozn2RjHGPYoknsWaQLJjArb3yiUk4/view):** a corrupt buyer agent awards a contract 47% over the spending limit. The AI auditor flags it, the human approves it anyway, and the limit in code still blocks it.
+**[▶ Watch the 5-minute demo](https://drive.google.com/file/d/1vk5Ozn2RjHGPYoknsWaQLJjArb3yiUk4/view):** in an April 24 run, a corrupt buyer agent awards a contract 47% over the spending limit. The AI auditor flags it, the human approves it anyway, and the limit in code still blocks it.
 
 ## The problem
 
 Multi-agent LLM systems are increasingly asked to run consequential workflows — sourcing, negotiation, spend approval — where the model is non-deterministic and, under adversarial prompting, potentially misaligned with the operator's intent. This project asks whether humans and deterministic controls can stay in charge of non-deterministic agents.
 
-This project answers it concretely by separating three kinds of authority:
+It does this by separating three kinds of authority:
 
 - **Non-deterministic behavior** lives in the LLM agents (buyer, vendors, auditor). They can argue, bluff, refuse, or — in the red-team scenarios — try to cheat.
 - **Human authority** lives at explicit approval gates. No contract executes without a typed `yes`.
@@ -117,7 +117,7 @@ The key design principle: **separate code-enforced outcomes from LLM prose**, so
 
 ## Key design decisions
 
-- **The one control that matters is in code, not a prompt.** The hard ceiling is a Python comparison invoked after human approval, deliberately outside the LLM's reach.
+- **The spending limit is enforced in code, not a prompt.** The hard ceiling is a Python comparison invoked after human approval, deliberately outside the LLM's reach.
 - **Human approval is a hard gate, not a suggestion.** `award_contract` is never called without a typed `yes`.
 - **The auditor is kept at arm's length.** The Strategic Audit informs the human but is not fed back into the buyer's negotiation context, so the critic cannot be co-opted by the negotiator.
 - **Vendor isolation is enforced by construction.** Each vendor has its own message thread; the orchestrator only ever relays the buyer's own text, never another vendor's bid.
