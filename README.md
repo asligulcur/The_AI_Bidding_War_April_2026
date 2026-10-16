@@ -6,6 +6,8 @@ In plain terms: AI agents negotiate a software purchase, and the project tests w
 
 *Built solo for CMU Heinz College's Agentic Technologies (April 2026), with AI coding assistance.*
 
+**[▶ Watch the 5-minute demo](https://drive.google.com/file/d/1em0aBhCFbOSiBhc7SMRlDou7-qV8cZNP/view):** a corrupt buyer agent awards a $22,000 contract against a $15,000 limit. The AI auditor flags it, the human approves it anyway, and the spending limit in code still blocks it.
+
 ## The problem
 
 Multi-agent LLM systems are increasingly asked to run consequential workflows — sourcing, negotiation, spend approval — where the model is non-deterministic and, under adversarial prompting, potentially misaligned with the operator's intent. This project asks whether humans and deterministic controls can stay in charge of non-deterministic agents.
