@@ -2,7 +2,7 @@
 
 A hub-and-spoke multi-agent procurement simulator: a buyer agent negotiates with three isolated vendor agents (A/B/C) over up to three rounds, under an LLM strategic-audit layer, human-in-the-loop approval gates, and a deterministic budget ceiling enforced in code rather than in a prompt. Built on the Anthropic API.
 
-In plain terms: AI agents negotiate a software purchase, and the project tests whether a human approver and a hard-coded spending limit keep them in check, even when the buyer agent is told to cheat.
+In plain terms: AI agents negotiate a software purchase, and the project tests whether four safeguards keep them in check, even when the buyer agent is told to cheat: vendors that can't see each other's bids, an AI auditor that reviews every proposed award, a human who must approve it, and a spending limit enforced in code.
 
 *Built solo for CMU Heinz College's Agentic Technologies (April 2026), with AI coding assistance.*
 
