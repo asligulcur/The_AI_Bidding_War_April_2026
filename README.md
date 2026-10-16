@@ -4,7 +4,7 @@ A hub-and-spoke multi-agent procurement simulator: a buyer agent negotiates with
 
 ## The problem
 
-Multi-agent LLM systems are increasingly asked to run consequential workflows — sourcing, negotiation, spend approval — where the model is non-deterministic and, under adversarial prompting, potentially misaligned with the operator's intent. The interesting question is not "can agents negotiate?" but "can you keep humans and deterministic controls in charge of non-deterministic agents?"
+Multi-agent LLM systems are increasingly asked to run consequential workflows — sourcing, negotiation, spend approval — where the model is non-deterministic and, under adversarial prompting, potentially misaligned with the operator's intent. This project asks whether humans and deterministic controls can stay in charge of non-deterministic agents.
 
 This project answers it concretely by separating three kinds of authority:
 
@@ -99,7 +99,7 @@ The public `requirements` string is what vendors see; internal targets, ceilings
 
 The evaluation pipeline (`python scripts/export_evaluation.py`) harvests any local `logs/` (transcripts are gitignored, so a fresh clone has none) and merges them into the committed `evaluation/` artifacts — CSVs, a rubric, a failure log, and a generated report. Reading those committed artifacts needs no API key; regenerating them from new runs does.
 
-The design principle worth highlighting: **separate code-enforced outcomes from LLM prose**, so a dramatic-looking transcript is never mistaken for a real control. The evaluation distinguishes four layers of claim:
+The key design principle: **separate code-enforced outcomes from LLM prose**, so a dramatic-looking transcript is never mistaken for a real control. The evaluation distinguishes four layers of claim:
 
 1. **Deterministic guardrail** — did `award_contract` correctly enforce the ceiling? This does not depend on how convincing the corrupt roleplay looked.
 2. **Red-team dialogue** — transcript "theater" varies run to run; a thin or refused corrupt arc is not a failure if the guardrail, audit, and human gate behaved correctly.
@@ -122,7 +122,7 @@ The design principle worth highlighting: **separate code-enforced outcomes from 
 
 ## Limitations
 
-- **Public-channel redaction is prompt-level, not code-level.** The buyer's message is relayed verbatim to all three vendors each round. Prompts instruct the buyer not to leak cross-vendor prices or comparisons, but the orchestrator does not programmatically redact that text — so leakage is mitigated, not eliminated. This is the clearest place where a control is aspirational rather than enforced, and it is called out honestly rather than hidden.
+- **Public-channel redaction is prompt-level, not code-level.** The buyer's message is relayed verbatim to all three vendors each round. Prompts instruct the buyer not to leak cross-vendor prices or comparisons, but the orchestrator does not programmatically redact that text — so leakage is mitigated, not eliminated. This is the clearest case in the project of a control that is aspirational rather than enforced.
 - **This is a simulation.** Vendors, prices, and narratives are LLM-generated; it is not production procurement or legal advice.
 - **Run-to-run variance.** Model, temperature, and snapshot changes shift dialogue shape; scored results should be read alongside the saved `logs/`, not chat prose alone.
 - **Guardrail scope.** The deterministic control covers the price ceiling only. Non-price integrity risks (steering, COI) are surfaced by the LLM auditor for human judgment, not blocked in code.
